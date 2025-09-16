@@ -132,6 +132,7 @@ def get_base_camp(st):
 
     base_list = []
     min_dis = 100
+    min_rc = (n, n)
     finished = False
 
     visited[st[0]][st[1]] = True
@@ -146,15 +147,14 @@ def get_base_camp(st):
                 break
             if can_go(ni, nj) and not visited[ni][nj]:
                 if base_map[ni][nj] == 1:
-                    base_list.append([ni, nj])
+                    min_rc = min(min_rc, (ni, nj))
                     min_dis = nd
                     visited[ni][nj] = True
                 else:
                     q.append((ni, nj, nd))
                     visited[ni][nj] = True
 
-    base_list.sort(key=lambda x: [x[0], x[1]])
-    return base_list[0]
+    return list(min_rc)
 
 
 def get_path(start, end):
