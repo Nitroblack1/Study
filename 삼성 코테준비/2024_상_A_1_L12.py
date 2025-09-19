@@ -88,12 +88,12 @@ def explore():
             # print('90', cur_t)
             # debug(b)
             if max_t < cur_t:
-                max_std = (0, i, j)
+                max_std = (0, j, i)
                 max_t = cur_t
                 max_b = b
             if max_t == cur_t:
-                if max_std > (0, i, j):
-                    max_std = (0, i, j)
+                if max_std > (0, j, i):
+                    max_std = (0, j, i)
                     max_t = cur_t
                     max_b = b
 
@@ -102,12 +102,12 @@ def explore():
             # print('180', cur_t)
             # debug(b)
             if max_t < cur_t:
-                max_std = (1, i, j)
+                max_std = (1, j, i)
                 max_t = cur_t
                 max_b = b
             if max_t == cur_t:
-                if max_std > (1, i, j):
-                    max_std = (1, i, j)
+                if max_std > (1, j, i):
+                    max_std = (1, j, i)
                     max_t = cur_t
                     max_b = b
 
@@ -115,12 +115,12 @@ def explore():
             # print('270', cur_t)
             # debug(b)
             if max_t < cur_t:
-                max_std = (2, i, j)
+                max_std = (2, j, i)
                 max_t = cur_t
                 max_b = b
             if max_t == cur_t:
-                if max_std > (2, i, j):
-                    max_std = (2, i, j)
+                if max_std > (2, j, i):
+                    max_std = (2, j, i)
                     max_t = cur_t
                     max_b = b
 
@@ -230,35 +230,19 @@ turn = 0
 fill_idx = 0
 while turn < k:
     cur_fill_idx = fill_idx
-    print('turn', turn + 1)
-    print('before rotate')
-    debug(grid)
 
     max_treasure, grid = explore()
-    debug(grid)
 
     if max_treasure < 3:
-        print('no pop')
         break
 
     is_chain = pop()
-    print('after pop')
-    debug(grid)
     while is_chain:
         fill()
-        print('after fill')
-        debug(grid)
 
         is_chain = pop()
         if not is_chain:
-            print('chain fin')
             break
 
-        print('pop after fill')
-        debug(grid)
-
-    print(fill_idx - cur_fill_idx)
-    print()
+    print(fill_idx - cur_fill_idx, end=" ")
     turn += 1
-# 7 1 1 / 1 4 1 / 2 4 3 3 2 2 / 2 3 4 / 6 4 7 / 5
-
