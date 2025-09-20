@@ -50,7 +50,7 @@ def is_entered(cen_idx):
     return False
 
 
-def drop(gol, gol_num):
+def drop(gol):
     ci, cj = 1, gol[0] - 1
     moved = True
     while moved:
@@ -60,17 +60,15 @@ def drop(gol, gol_num):
 
         moved, ci = move_south(ci, cj)
         if moved:
-            draw(ci - 1, cj, ci, cj, gol_num, gol[1])
             continue
         moved, ci, cj, gol[1] = move_west(ci, cj, gol[1])
         if moved:
-            draw(ci - 1, cj + 1, ci, cj, gol_num, gol[1])
             continue
         moved, ci, cj, gol[1] = move_east(ci, cj, gol[1])
-        if moved:
-            draw(ci - 1, cj - 1, ci, cj, gol_num, gol[1])
+        if not moved:
+            break
 
-    return ci, cj
+    return ci, cj, gol[1]
 
 
 def move_south(ci, cj):
@@ -108,13 +106,8 @@ def move_east(ci, cj, ex):
                         return True, ci, cj, ex
     return False, ci, cj, ex
 
-
 dss = [-1, 0], [0, 1], [1, 0], [0, -1]
-def draw(pi, pj, ci, cj, gol_num, ex):
-    forest[pi][pj][0] = 0
-    for cr in dss:
-        forest[pi + cr[0]][pj + cr[1]] = [0, False]
-
+def draw(ci, cj, gol_num, ex):
     forest[ci][cj][0] = gol_num
     for i in range(4):
         if i == ex:
@@ -163,12 +156,13 @@ def explore():
     num = 0
     total_row = 0
     while num < k:
-        cen_idx = drop(golem[num], num + 1)
-        if not is_entered(cen_idx):
+        cen_i, cen_j, ex = drop(golem[num])
+        if not is_entered([cen_i, cen_j]):
             initialize_forest()
             num += 1
             continue
-        total_row += nymph(cen_idx, num + 1)
+        draw(cen_i, cen_j, num + 1, ex)
+        total_row += nymph([cen_i, cen_j], num + 1)
         num += 1
 
     return total_row
