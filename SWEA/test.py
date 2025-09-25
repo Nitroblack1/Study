@@ -1,17 +1,6 @@
-indices = set()
-k = 3
+from collections import deque
 
-def gen_idx(i, j, r, c):
-    global indices
-    if abs(r) + abs(c) == k:
-        return
+q = deque()
 
-    indices.add((i + r, j + c))
-    indices.add((i - r, j - c))
-    indices.add((i + r, j - c))
-    indices.add((i - r, j + c))
-    gen_idx(i, j, r + 1, c)
-    gen_idx(i, j, r, c + 1)
-
-gen_idx(0, 0, 0, 0)
-print(list(indices))
+if not q:
+    print('a')
