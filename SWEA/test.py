@@ -1,6 +1,3 @@
-from collections import deque
+la = [[], [], []]
 
-q = deque()
-
-if not q:
-    print('a')
+print(len(la) == 3)
