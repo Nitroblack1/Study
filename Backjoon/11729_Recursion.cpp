@@ -2,10 +2,6 @@
 #include <queue>
 using namespace std;
 
-void move(int n, int start, int end) {
-    cout << start << ' ' << end << '\n';
-}
-
 int hanoi(int n, int start, int end, int via, queue<string>& result) {
     if (n <= 1) {
         result.push(to_string(start) + " " + to_string(end));
