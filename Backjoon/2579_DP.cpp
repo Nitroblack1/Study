@@ -1,12 +1,14 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int main() {
     int n;
     cin >> n;
 
-    int score[n];
-    int dp[n];
+    vector<int> score(n);
+    vector<int> dp(n);
 
     for (int i = 0; i < n; i++) {
         cin >> score[i];
