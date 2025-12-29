@@ -1,93 +1,97 @@
-// Hash table은 키를 값에 매핑할 수 있는 구조인, 연관 배열 추가에 사용되는 자료 구조이다.
-// Hash table은 Hash 함수를 사용하여 색인(Index, Key)을 버킷(bucket)이나 슬롯(slot)의 배열로 계산한다.
-
 #include <iostream>
-#include <cstring>
+#include <string>
+#include <vector>
+#include <functional>
 using namespace std;
 
-#define MAX_KEY 64
-#define MAX_DATA 128
-#define MAX_TABLE 4096
+class HashTable {
+private:
+    static constexpr size_t TABLE_SIZE = 4096;
 
-struct HashEntry {              // 해시 테이블의 엔트리 구조체
-    char key[MAX_KEY + 1];
-    char data[MAX_DATA + 1];
+    struct Entry {
+        string key;
+        string value;
+        bool occupied = false;   // 현재 이 슬롯이 사용 중인가?
+    };
+
+    vector<Entry> table;
+
+    size_t hashKey(const string& key) const {
+        return std::hash<string>{}(key) % TABLE_SIZE;
+    }
+
+public:
+    HashTable() : table(TABLE_SIZE) {}
+
+    void clear() {
+        for (auto& e : table) e = Entry{};
+    }
+
+    // key 존재하면 value를 out에 넣고 true
+    bool find(const string& key, string& out) const {
+        size_t h = hashKey(key);
+        size_t cnt = TABLE_SIZE;
+
+        while (table[h].occupied && cnt--) {
+            if (table[h].key == key) {
+                out = table[h].value;
+                return true;
+            }
+            h = (h + 1) % TABLE_SIZE;
+        }
+        return false;
+    }
+
+    // key 없으면 삽입하고 true, 이미 있으면 false
+    bool insert(const string& key, const string& value) {
+        size_t h = hashKey(key);
+        size_t cnt = TABLE_SIZE;
+
+        while (table[h].occupied && cnt--) {
+            if (table[h].key == key) return false; // already exists
+            h = (h + 1) % TABLE_SIZE;
+        }
+
+        if (cnt == 0) return false; // 테이블이 꽉 찼거나 비정상
+
+        table[h].key = key;
+        table[h].value = value;
+        table[h].occupied = true;
+        return true;
+    }
 };
-
-HashEntry tb[MAX_TABLE];
-
-unsigned long djb2_hash(const char* str) {
-    unsigned long h = 5381;
-    int c;
-
-    while ((c = *str++)) {
-        h = (((h << 5) + h) + c) % MAX_TABLE; // h * 33 + c
-    }
-    return h % MAX_TABLE;
-}
-
-bool find_key(const char* key, char* out_data) {
-    unsigned long h = djb2_hash(key);
-    int cnt = MAX_TABLE;
-
-    while (tb[h].key[0] != 0 && cnt--) {
-        if (strcmp(tb[h].key, key) == 0) {
-            strcpy(out_data, tb[h].data);
-            return true;
-        }
-        h = (h + 1) % MAX_TABLE; // linear probing
-    }
-    return false;
-}
-
-bool add_key(const char* key, const char* data) {
-    unsigned long h = djb2_hash(key);
-
-    while (tb[h].key[0] != 0) {
-        if (strcmp(tb[h].key, key) == 0) {
-            return false; // already exists
-        }
-        h = (h + 1) % MAX_TABLE;
-    }
-    strcpy(tb[h].key, key);
-    strcpy(tb[h].data, data);
-    return true;
-}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int T, N, Q;
+    int T;
     cin >> T;
 
-    for (int test_case = 1; test_case <= T; test_case++) {
-        memset(tb, 0, sizeof(tb));
+    HashTable ht;
 
+    for (int tc = 1; tc <= T; tc++) {
+        ht.clear();
+
+        int N;
         cin >> N;
 
-        char k[MAX_KEY + 1];
-        char d[MAX_DATA + 1];
-
         for (int i = 0; i < N; i++) {
+            string k, d;
             cin >> k >> d;
-            add_key(k, d);
+            ht.insert(k, d);
         }
 
-        cout << "#" << test_case << "\n";
+        cout << "#" << tc << "\n";
 
+        int Q;
         cin >> Q;
         for (int i = 0; i < Q; i++) {
-            char qk[MAX_KEY + 1];
-            char out[MAX_DATA + 1];
-
+            string qk, out;
             cin >> qk;
 
-            if (find_key(qk, out)) {
-                cout << out << "\n";
-            } else {
-                cout << "not find\n";
-            }
+            if (ht.find(qk, out)) cout << out << "\n";
+            else cout << "not find\n";
         }
     }
     return 0;

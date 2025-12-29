@@ -24,7 +24,8 @@ int main() {
     int dc[4] = {0, 0, -1, 1};
 
     while (!q.empty()) {
-        auto [r, c] = q.front();
+        int r = q.front().first;
+        int c = q.front().second;
         q.pop();
 
         for (int k = 0; k < 4; k++) {
