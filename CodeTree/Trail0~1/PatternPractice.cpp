@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+#define MAX_N 1000
 
 void diamond() {
     int n;
@@ -197,6 +198,35 @@ void numPattern2() {
     for (int i = 0; i < n; i++) {
         for (int j = i; j >= 0; j--) {
             cout << n - j << " ";
+        }
+        cout << endl;
+    }
+}
+
+void numPattern3() {
+    int n, num = 1;
+    cin >> n;
+
+    int grid[MAX_N][MAX_N];
+    bool down = false;
+
+    for (int col = n - 1; col >= 0; col--) {
+        if (!down) {
+            for (int row = n - 1; row >= 0; row--) {
+                grid[row][col] = num++;
+            }
+            down = true;
+        } else {
+            for (int row = 0; row < n; row++) {
+                grid[row][col] = num++;
+            }
+            down = false;
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << grid[i][j] << " ";
         }
         cout << endl;
     }
