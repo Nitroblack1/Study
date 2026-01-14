@@ -2,6 +2,7 @@
 #include <string>
 #include <cctype>
 using namespace std;
+#define MAX_N 1000
 
 void getLinePractice() {
     string str1, str2;
@@ -102,6 +103,11 @@ void cctypeLibraryExample() {
     }
 
     cout << to_string(sum).substr(1) + to_string(sum)[0];
+}
+
+int CommonMultiple(int n, int m) {
+    int arr[MAX_N];
+
 }
 
 int main() {
